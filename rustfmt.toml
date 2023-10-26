@@ -1,0 +1,12 @@
+format_strings = false
+newline_style = "Unix"
+indent_style = "Block"
+imports_indent = "Block"
+control_brace_style = "AlwaysSameLine"
+max_width = 120
+fn_call_width = 120
+attr_fn_like_width = 120
+array_width = 120
+chain_width = 120  # TODO: revisit chaining settings when issue 4306 is resolved
+merge_derives = false
+group_imports = "StdExternalCrate"

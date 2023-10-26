@@ -1,0 +1,33 @@
+[package]
+name = "rand-sequence"
+version = "0.1.0"
+edition = "2021"
+authors = ["Liam Gray <gmail@liamg.me>"]
+description = "An O(1) no-std algorithm for generating random sequences of unique integers."
+repository = "https://github.com/hoxxep/rand-sequence"
+documentation = "https://docs.rs/rand-sequence"
+license = "MIT OR Apache-2.0"
+readme = "README.md"
+keywords = ["random", "sequence", "unique", "numbers", "no-std"]
+exclude = ["Cargo.lock"]
+
+[lib]
+
+[[bench]]
+name = "bench"
+harness = false
+
+[dependencies]
+num-traits = "0.2"
+num-modular = { version = "0.6", default-features = false }
+rand = { version = "0", default-features = false, optional = true }
+serde = { version = "1", optional = true, features = ["derive"] }
+
+[dev-dependencies]
+criterion = "0.5"
+is_prime = "2.0"
+plotters = "0.3"
+statrs = "0.16"
+
+[features]
+default = ["rand"]
