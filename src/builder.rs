@@ -178,6 +178,9 @@ mod tests {
         n % 4 == 3
     }
 
+    fn is_send<T: Send>() {}
+    fn is_sync<T: Sync>() {}
+
     macro_rules! test_config {
         ($name:ident, $type:ident, $check:literal) => {
             #[test]
@@ -229,6 +232,10 @@ mod tests {
                     }
                 }
                 assert_eq!(nums.len(), (0..CHECK).len());
+
+                // check builder is send and sync
+                is_send::<RandomSequenceBuilder<$type>>();
+                is_sync::<RandomSequenceBuilder<$type>>();
             }
         };
     }

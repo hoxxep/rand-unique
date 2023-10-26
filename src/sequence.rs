@@ -116,7 +116,10 @@ mod tests {
     use rand::rngs::OsRng;
     use statrs::distribution::{ChiSquared, ContinuousCDF};
 
-    use crate::RandomSequenceBuilder;
+    use super::*;
+
+    fn is_send<T: Send>() {}
+    fn is_sync<T: Sync>() {}
 
     macro_rules! test_sequence {
         ($name:ident, $type:ident, $check:literal) => {
@@ -135,6 +138,10 @@ mod tests {
 
                 let nums: HashSet<$type> = config.into_iter().take($check).collect();
                 assert_eq!(nums.len(), $check);
+
+                // check sequence is send and sync (although index won't be synced between threads)
+                is_send::<RandomSequence<$type>>();
+                is_sync::<RandomSequence<$type>>();
             }
         };
     }
