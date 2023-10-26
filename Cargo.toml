@@ -1,6 +1,6 @@
 [package]
 name = "rand-sequence"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["Liam Gray <gmail@liamg.me>"]
 description = "A no-std crate for generating random sequences of unique integers in O(1) time."
@@ -10,7 +10,7 @@ license = "MIT OR Apache-2.0"
 readme = "README.md"
 keywords = ["random", "sequence", "unique", "numbers", "no-std"]
 categories = ["algorithms", "no-std"]
-exclude = ["Cargo.lock", "charts/*"]
+exclude = ["Cargo.lock", "charts/*", ".github"]
 
 [lib]
 
@@ -20,7 +20,6 @@ harness = false
 
 [dependencies]
 num-traits = "0.2"
-num-modular = { version = "0.6", default-features = false }
 rand = { version = "0", default-features = false, optional = true }
 serde = { version = "1", optional = true, features = ["derive"] }
 
@@ -32,3 +31,7 @@ statrs = "0.16"
 
 [features]
 default = ["rand"]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]

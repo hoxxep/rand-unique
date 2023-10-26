@@ -5,6 +5,7 @@ criterion_main!(benches);
 
 mod sequence {
     use criterion::{black_box, BatchSize, Bencher, Criterion};
+    use rand::rngs::OsRng;
     use rand_sequence::RandomSequence;
 
     pub fn sequence_bench(c: &mut Criterion) {
@@ -19,7 +20,7 @@ mod sequence {
     macro_rules! bench_n {
         ($name:ident, $type:ident) => {
             fn $name(b: &mut Bencher) {
-                let sequence = RandomSequence::<$type>::rand();
+                let sequence = RandomSequence::<$type>::rand(&mut OsRng);
 
                 b.iter_batched(
                     || rand::random::<$type>(),
@@ -37,6 +38,6 @@ mod sequence {
 
     /// Compare standard random number generation time.
     fn bench_rand_u64(b: &mut Bencher) {
-        b.iter(|| black_box({ rand::random::<u64>() }))
+        b.iter(|| black_box(rand::random::<u64>()))
     }
 }

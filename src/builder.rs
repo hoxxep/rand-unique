@@ -1,4 +1,3 @@
-use num_modular::{ModularInteger, Montgomery, MontgomeryInt, Reducer};
 use num_traits::{PrimInt, WrappingAdd, WrappingSub};
 
 use crate::sequence::RandomSequence;
@@ -22,8 +21,7 @@ use crate::sequence::RandomSequence;
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct RandomSequenceBuilder<T>
 where
-    T: PrimInt + WrappingAdd + WrappingSub,
-    Montgomery<T>: Reducer<T>,
+    T: PrimInt + WrappingAdd + WrappingSub + QuadraticResidue
 {
     pub seed_base: T,
     pub seed_offset: T,
@@ -45,8 +43,7 @@ where
 
 impl<T> RandomSequenceBuilder<T>
 where
-    T: PrimInt + WrappingAdd + WrappingSub,
-    Montgomery<T>: Reducer<T>,
+    T: PrimInt + WrappingAdd + WrappingSub + QuadraticResidue
 {
     /// Initialise a config from stored settings. Not recommended unless you know what you're doing,
     /// or these values have been taken from an already serialized RandomSequenceBuilder.
@@ -79,8 +76,10 @@ where
         }
 
         // (x * x) % prime; but done safely to avoid integer overflow on x * x
-        let xm = MontgomeryInt::new(x, &self.prime);
-        let residue = (xm * xm).residue();
+        // let xm = MontgomeryInt::new(x, &self.prime);
+        // let residue = (xm * xm).residue();
+
+        let residue = x.residue(self.prime);
 
         // Op: `self.prime / 2` the bit shift is used to get around rust types
         if x <= self.prime >> 1 {
@@ -93,8 +92,7 @@ where
 
 impl<T> IntoIterator for RandomSequenceBuilder<T>
 where
-    T: PrimInt + WrappingAdd + WrappingSub,
-    Montgomery<T>: Reducer<T>,
+    T: PrimInt + WrappingAdd + WrappingSub + QuadraticResidue
 {
     type Item = T;
     type IntoIter = RandomSequence<T>;
@@ -164,6 +162,26 @@ impl RandomSequenceBuilder<u64> {
         }
     }
 }
+
+pub trait QuadraticResidue {
+    fn residue(self, prime: Self) -> Self;
+}
+
+macro_rules! impl_residue {
+    ($base_type:ident, $larger_type:ident) => {
+        impl QuadraticResidue for $base_type {
+            /// Compute the quadratic residue of this number against a prime.
+            fn residue(self, prime: Self) -> Self {
+                ((self as $larger_type * self as $larger_type) % prime as $larger_type) as Self
+            }
+        }
+    };
+}
+
+impl_residue!(u8, u16);
+impl_residue!(u16, u32);
+impl_residue!(u32, u64);
+impl_residue!(u64, u128);
 
 #[cfg(test)]
 mod tests {
