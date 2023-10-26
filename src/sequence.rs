@@ -164,19 +164,19 @@ mod tests {
                 config
                     .into_iter()
                     .take($check)
-                    .map(|i| ((i as f64 / $type::MAX as f64) / BUCKETS as f64) as usize)
+                    .map(|i| ((i as f64 / $type::MAX as f64) * BUCKETS as f64) as usize)
                     .for_each(|i| *data_buckets.entry(i).or_insert(0) += 1);
                 let data_buckets: Vec<f64> = (0..=BUCKETS)
-                    .map(|i| *data_buckets.get(&i).unwrap_or(&0) as f64 / $check as f64)
+                    .map(|i| *data_buckets.get(&i).unwrap_or(&0) as f64)
                     .collect();
 
                 // compute the probability of each bucket being hit, assuming a uniform distribution.
                 // careful for u8 where we have 256 for only 100 buckets; and so some buckets have 2 vs 3 expected values,
                 // as this represents the percentage of values that should fall into each bucket assuming perfectly uniform.
                 let mut uniform_buckets: Vec<f64> = (0..BUCKETS)
-                    .map(|_| (1.0 as f64 / BUCKETS as f64))
+                    .map(|_| ($check as f64 / BUCKETS as f64))
                     .collect();
-                uniform_buckets.push(1.0 / $type::MAX as f64); // last bucket for value=$type::MAX
+                uniform_buckets.push($check as f64 / $type::MAX as f64); // last bucket for value=$type::MAX
 
                 // compute chi-squared statistic
                 assert_eq!(data_buckets.len(), uniform_buckets.len(), "Data and uniform buckets logic issue.");
@@ -188,14 +188,16 @@ mod tests {
                 let chi_dist = ChiSquared::new((BUCKETS - 1) as f64).unwrap();
                 let p_value = 1.0 - chi_dist.cdf(chi_squared);
 
-                // we're trying to not reject the null hypothesis, and so the p_value should be around 0.5
-                assert!(p_value < 0.9, "Unexpectedly rejected the null hypothesis with p < 0.05. Null hypothesis is that the output is uniformly distributed. stat: {}, p: {}", chi_squared, p_value);
+                // FIXME: choose a better test, because this doesn't strictly confirm the uniform distribution
+                //   and there is a suspiciously large amount of variance in the p_values between test runs.
+                // p_value <= 0.05 would say with 95% certainty that this distribution is _not_ uniform
+                assert!(p_value > 0.05, "Unexpectedly rejected the null hypothesis with high probability. stat: {}, p: {}", chi_squared, p_value);
             }
         };
     }
 
     test_distribution!(test_u8_distribution, u8, 256);
-    // test_distribution!(test_u16_distribution, u16, 65536);
-    // test_distribution!(test_u32_distribution, u32, 100_000);
-    test_distribution!(test_u64_distribution, u64, 10_000);
+    test_distribution!(test_u16_distribution, u16, 65536);
+    test_distribution!(test_u32_distribution, u32, 100_000);
+    test_distribution!(test_u64_distribution, u64, 100_000);
 }
