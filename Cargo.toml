@@ -3,13 +3,14 @@ name = "rand-sequence"
 version = "0.1.0"
 edition = "2021"
 authors = ["Liam Gray <gmail@liamg.me>"]
-description = "An O(1) no-std algorithm for generating random sequences of unique integers."
+description = "A no-std crate for generating random sequences of unique integers in O(1) time."
 repository = "https://github.com/hoxxep/rand-sequence"
 documentation = "https://docs.rs/rand-sequence"
 license = "MIT OR Apache-2.0"
 readme = "README.md"
 keywords = ["random", "sequence", "unique", "numbers", "no-std"]
-exclude = ["Cargo.lock"]
+categories = ["algorithms", "no-std"]
+exclude = ["Cargo.lock", "charts/*"]
 
 [lib]
 

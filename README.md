@@ -19,10 +19,10 @@ Properties:
 Future work could include a more rigorous analysis of the output distribution. For now, the following charts demonstrate the roughly uniform distribution for `RandomSequence<u16>`.
 
 Histogram visualisation of the `RandomSequence` output distribution.
-![Histogram demonstrating uniformity of distribution](charts/histogram-u16.png)
+![Histogram demonstrating uniformity of distribution](https://github.com/hoxxep/rand-sequence/raw/master/charts/histogram-u16.png)
 
 Visual scatter plot of the `RandomSequence` output.
-![Scatter plot of RandomSequence output](charts/scatter-u16.png)
+![Scatter plot of RandomSequence output](https://github.com/hoxxep/rand-sequence/raw/master/charts/scatter-u16.png)
 
 ## Features
 
