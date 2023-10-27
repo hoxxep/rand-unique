@@ -1,4 +1,5 @@
 #![doc = include_str!("../README.md")]
+
 #![no_std]
 #[cfg(test)]
 extern crate std;
@@ -11,5 +12,6 @@ pub use crate::sequence::RandomSequence;
 mod builder;
 #[cfg(feature = "rand")]
 mod rand;
+pub mod permute;
 mod seed;
 mod sequence;

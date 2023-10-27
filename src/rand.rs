@@ -7,9 +7,7 @@ macro_rules! init_rand {
         impl RandomSequenceBuilder<$type> {
             /// Initialise a RandomSequenceBuilder from a random seed.
             pub fn rand(rng: &mut impl RngCore) -> Self {
-                let seed_base = rng.next_u64() as $type;
-                let seed_offset = rng.next_u64() as $type;
-                Self::new(seed_base, seed_offset)
+                Self::seed(rng.next_u64())
             }
         }
 
@@ -44,3 +42,4 @@ init_rand!(u8, tests_u8);
 init_rand!(u16, tests_u16);
 init_rand!(u32, tests_u32);
 init_rand!(u64, tests_u64);
+init_rand!(usize, tests_usize);
