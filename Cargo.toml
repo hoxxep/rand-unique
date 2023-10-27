@@ -1,6 +1,6 @@
 [package]
 name = "rand-sequence"
-version = "0.1.1"
+version = "0.2.0"
 edition = "2021"
 authors = ["Liam Gray <gmail@liamg.me>"]
 description = "A no-std crate for generating random sequences of unique integers in O(1) time."
@@ -20,12 +20,12 @@ harness = false
 
 [dependencies]
 num-traits = "0.2"
+machine-prime = "1.2"
 rand = { version = "0", default-features = false, optional = true }
 serde = { version = "1", optional = true, features = ["derive"] }
 
 [dev-dependencies]
 criterion = "0.5"
-is_prime = "2.0"
 plotters = "0.3"
 statrs = "0.16"
 
