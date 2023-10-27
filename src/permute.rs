@@ -7,13 +7,13 @@ pub trait PermuteSlice<'a, T> {
     ///
     /// Only available with the `rand` feature.
     #[cfg(feature = "rand")]
-    fn permute(&'a self, rng: &'a mut dyn rand::RngCore) -> PermutedSlice<'a, T>;
+    fn permute(&'a self, rng: &'a mut impl rand::RngCore) -> PermutedSlice<'a, T>;
 
     /// Randomly permute a SliceMut, returning a [PermutedSliceMut].
     ///
     /// Only available with the `rand` feature.
     #[cfg(feature = "rand")]
-    fn permute_mut(&'a self, rng: &'a mut dyn rand::RngCore) -> PermutedSliceMut<'a, T>;
+    fn permute_mut(&'a self, rng: &'a mut impl rand::RngCore) -> PermutedSliceMut<'a, T>;
 
     /// Randomly permute a Slice with a specific seed, returning a [PermutedSlice].
     fn permute_with_seed(&'a self, seed: u64) -> PermutedSlice<'a, T>;
@@ -64,12 +64,12 @@ fn permute_mut_inner<T>(slice: &[T], builder: RandomSequenceBuilder<usize>) -> P
 
 impl<'a, T> PermuteSlice<'a, T> for &'a [T] {
     #[cfg(feature = "rand")]
-    fn permute(&'a self, rng: &'a mut dyn rand::RngCore) -> PermutedSlice<'a, T> {
+    fn permute(&'a self, rng: &'a mut impl rand::RngCore) -> PermutedSlice<'a, T> {
         permute_inner(self, RandomSequenceBuilder::<usize>::rand(rng))
     }
 
     #[cfg(feature = "rand")]
-    fn permute_mut(&'a self, rng: &'a mut dyn rand::RngCore) -> PermutedSliceMut<'a, T> {
+    fn permute_mut(&'a self, rng: &'a mut impl rand::RngCore) -> PermutedSliceMut<'a, T> {
         permute_mut_inner(self, RandomSequenceBuilder::<usize>::rand(rng))
     }
 
