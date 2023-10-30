@@ -12,7 +12,7 @@ Properties:
   - Note that once a number has appeared in the sequence, it will not appear again. Each value in this sequence is unique.
 - Computing the value for any random index in the sequence is an O(1) operation.
   - `RandomSequence::n(index)` returns the output for a given position in the sequence.
-- Support for `u8`, `u16`, `u32`, and `u64`. Outputs can be cast to `i8`, `i16`, `i32`, and `i64` respectively.
+- Support for `u8`, `u16`, `u32`, `u64`, and `usize`. Outputs can be cast to `i8`, `i16`, `i32`, `i64`, and `isize` respectively.
 
 ## Output Distribution
 
@@ -43,9 +43,9 @@ let config = RandomSequenceBuilder::<u64>::rand(&mut OsRng);
 let mut sequence = config.into_iter();
 
 // Iterate over the sequence with next() and prev(), or index directly with n(i).
-assert_eq!(sequence.next(), sequence.n(0));
-assert_eq!(sequence.next(), sequence.n(1));
-assert_eq!(sequence.next(), sequence.n(2));
+assert_eq!(sequence.next().unwrap(), sequence.n(0));
+assert_eq!(sequence.next().unwrap(), sequence.n(1));
+assert_eq!(sequence.next().unwrap(), sequence.n(2));
 
 // Unique across the entire type, with support for u8, u16, u32, and u64.
 let sequence = RandomSequence::<u16>::rand(&mut OsRng);

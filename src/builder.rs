@@ -1,4 +1,4 @@
-use num_traits::{PrimInt, WrappingAdd, WrappingSub};
+use num_traits::{AsPrimitive, PrimInt, WrappingAdd, WrappingSub};
 
 use crate::sequence::RandomSequence;
 
@@ -21,9 +21,12 @@ use crate::sequence::RandomSequence;
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct RandomSequenceBuilder<T>
 where
-    T: PrimInt + WrappingAdd + WrappingSub + QuadraticResidue
+    T: QuadraticResidue
 {
+    /// The seed for the the start index.
     pub seed_base: T,
+
+    /// The seed for the offsetting addition.
     pub seed_offset: T,
 
     /// A value used as an xor during initialisation for `start_index = f(seed_base, init_base)` to
@@ -43,7 +46,7 @@ where
 
 impl<T> RandomSequenceBuilder<T>
 where
-    T: PrimInt + WrappingAdd + WrappingSub + QuadraticResidue
+    T: QuadraticResidue
 {
     /// Initialise a config from stored settings. Not recommended unless you know what you're doing,
     /// or these values have been taken from an already serialized RandomSequenceBuilder.
@@ -92,7 +95,8 @@ where
 
 impl<T> IntoIterator for RandomSequenceBuilder<T>
 where
-    T: PrimInt + WrappingAdd + WrappingSub + QuadraticResidue
+    T: QuadraticResidue,
+    RandomSequence<T>: Iterator<Item = T>,
 {
     type Item = T;
     type IntoIter = RandomSequence<T>;
@@ -105,13 +109,15 @@ where
         RandomSequence {
             config: self,
             start_index,
-            current_index: start_index,
+            current_index: T::zero(),
             intermediate_offset,
+            ended: false,
         }
     }
 }
 
 impl RandomSequenceBuilder<u8> {
+    /// Initialise a [RandomSequenceBuilder] from a specific seed pair.
     pub fn new(seed_base: u8, seed_offset: u8) -> Self {
         Self {
             seed_base,
@@ -125,6 +131,7 @@ impl RandomSequenceBuilder<u8> {
 }
 
 impl RandomSequenceBuilder<u16> {
+    /// Initialise a [RandomSequenceBuilder] from a specific seed pair.
     pub fn new(seed_base: u16, seed_offset: u16) -> Self {
         Self {
             seed_base,
@@ -138,6 +145,7 @@ impl RandomSequenceBuilder<u16> {
 }
 
 impl RandomSequenceBuilder<u32> {
+    /// Initialise a [RandomSequenceBuilder] from a specific seed pair.
     pub fn new(seed_base: u32, seed_offset: u32) -> Self {
         Self {
             seed_base,
@@ -151,26 +159,44 @@ impl RandomSequenceBuilder<u32> {
 }
 
 impl RandomSequenceBuilder<u64> {
+    /// Initialise a [RandomSequenceBuilder] from a specific seed pair.
     pub fn new(seed_base: u64, seed_offset: u64) -> Self {
         Self {
             seed_base,
             seed_offset,
             init_base: 0x682f01615bf03635,
             init_offset: 0x46790905682f0161,
-            prime: 18446744073709551427, // largest prime: 18446744073709551557
+            prime: 18446744073709551427,
             intermediate_xor: 0x5bf0363546790905,
         }
     }
 }
 
-pub trait QuadraticResidue {
+impl RandomSequenceBuilder<usize> {
+    /// Initialise a [RandomSequenceBuilder] from a specific seed pair.
+    pub fn new(seed_base: usize, seed_offset: usize) -> Self {
+        Self {
+            seed_base,
+            seed_offset,
+            init_base: 0x682f01615bf03635,
+            init_offset: 0x46790905682f0161,
+            prime: 18446744073709551427,
+            intermediate_xor: 0x5bf0363546790905,
+        }
+    }
+}
+
+pub trait QuadraticResidue
+where
+    Self: PrimInt + AsPrimitive<usize> + WrappingAdd + WrappingSub
+{
+    /// Compute the quadratic residue of this number against a prime.
     fn residue(self, prime: Self) -> Self;
 }
 
 macro_rules! impl_residue {
     ($base_type:ident, $larger_type:ident) => {
         impl QuadraticResidue for $base_type {
-            /// Compute the quadratic residue of this number against a prime.
             fn residue(self, prime: Self) -> Self {
                 ((self as $larger_type * self as $larger_type) % prime as $larger_type) as Self
             }
@@ -182,6 +208,12 @@ impl_residue!(u8, u16);
 impl_residue!(u16, u32);
 impl_residue!(u32, u64);
 impl_residue!(u64, u128);
+#[cfg(target_pointer_width = "64")]
+impl_residue!(usize, u128);
+#[cfg(target_pointer_width = "32")]
+impl_residue!(usize, u64);
+#[cfg(not(any(target_pointer_width = "64", target_pointer_width = "32")))]
+compile_error!("Unsupported pointer width.");
 
 #[cfg(test)]
 mod tests {
