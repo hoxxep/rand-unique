@@ -101,10 +101,28 @@ where
         self.config.permute_qpr(inner_residue ^ self.config.intermediate_xor)
     }
 
-    /// Get the current position in the sequence.
+    /// Get the current position in the sequence. Will return `None` if the sequence has been exhausted.
     #[inline]
-    pub fn index(&self) -> T {
-        self.current_index
+    pub fn index(&self) -> Option<T> {
+        match self.ended {
+            false => Some(self.current_index),
+            true => None,
+        }
+    }
+
+    /// Check if this sequence has been exhausted.
+    #[inline]
+    pub fn exhausted(&self) -> bool {
+        self.ended
+    }
+
+    /// Set the index for the iterator.
+    ///
+    /// If the iterator was exhausted, this will reset it to the index set.
+    #[inline]
+    pub fn set_index(&mut self, index: T) {
+        self.current_index = index;
+        self.ended = false;
     }
 }
 
@@ -214,6 +232,40 @@ mod tests {
                 // check that we see each value only once
                 let nums: HashSet<$type> = config.into_iter().take($check).collect();
                 assert_eq!(nums.len(), $check);
+
+                // check exhaustion
+                {
+                    let mut sequence = config.into_iter();
+
+                    // initial index = 0
+                    assert!(!sequence.exhausted());
+                    assert_eq!(sequence.index(), Some(0));
+                    let first = sequence.next().unwrap();
+
+                    // final index
+                    sequence.set_index($type::MAX);
+                    assert!(!sequence.exhausted());
+                    assert_eq!(sequence.index(), Some($type::MAX));
+                    let last = sequence.next().unwrap();
+
+                    // exhausted
+                    assert!(sequence.exhausted());
+                    assert_eq!(sequence.index(), None);
+                    assert!(sequence.next().is_none());
+
+                    // reset
+                    sequence.set_index($type::MAX);
+                    assert!(!sequence.exhausted());
+                    assert_eq!(sequence.index(), Some($type::MAX));
+                    assert_eq!(sequence.next(), Some(last));
+                    assert!(sequence.exhausted());  // gets exhausted again
+
+                    // reset to 0
+                    sequence.set_index(0);
+                    assert!(!sequence.exhausted());
+                    assert_eq!(sequence.index(), Some(0));
+                    assert_eq!(sequence.next(), Some(first));
+                }
 
                 // check sequence is send and sync (although index won't be synced between threads)
                 is_send::<RandomSequence<$type>>();
