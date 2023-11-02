@@ -1,4 +1,4 @@
-# rand-sequence
+# rand-unique
 
 Deterministically generate a sequence of unique random numbers. A non-repeating pseudo-random number generator, directly index-able for the nth number in the sequence.
 
@@ -26,7 +26,7 @@ This crate is no-std compatible.
 
 ```rust
 use rand::rngs::OsRng;
-use rand_sequence::{RandomSequence, RandomSequenceBuilder};
+use rand_unique::{RandomSequence, RandomSequenceBuilder};
 
 // Initialise a sequence from a random seed.
 let config = RandomSequenceBuilder::<u64>::rand(&mut OsRng);
@@ -55,10 +55,10 @@ assert_eq!(nums.len(), u16::MAX as usize + 1);
 Future work could include a more rigorous analysis of the output distribution. For now, the following charts demonstrate the roughly uniform distribution for `RandomSequence<u16>`.
 
 Histogram visualisation of the `RandomSequence` output distribution.
-![Histogram demonstrating uniformity of distribution](https://github.com/hoxxep/rand-sequence/raw/master/charts/histogram-u16.png)
+![Histogram demonstrating uniformity of distribution](https://github.com/hoxxep/rand-unique/raw/master/charts/histogram-u16.png)
 
 Visual scatter plot of the `RandomSequence` output.
-![Scatter plot of RandomSequence output](https://github.com/hoxxep/rand-sequence/raw/master/charts/scatter-u16.png)
+![Scatter plot of RandomSequence output](https://github.com/hoxxep/rand-unique/raw/master/charts/scatter-u16.png)
 
 ## How It Works
 

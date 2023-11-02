@@ -2,7 +2,7 @@ use std::error::Error;
 
 use plotters::prelude::*;
 use rand::rngs::OsRng;
-use rand_sequence::RandomSequence;
+use rand_unique::RandomSequence;
 
 /// Generate histogram and scatter plots for a u16 sequence to demonstrate uniformity.
 fn main() -> Result<(), Box<dyn Error>> {

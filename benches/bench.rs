@@ -6,7 +6,7 @@ criterion_main!(benches);
 mod sequence {
     use criterion::{black_box, BatchSize, Bencher, Criterion};
     use rand::rngs::OsRng;
-    use rand_sequence::RandomSequence;
+    use rand_unique::RandomSequence;
 
     pub fn sequence_bench(c: &mut Criterion) {
         let mut group = c.benchmark_group("sequence");

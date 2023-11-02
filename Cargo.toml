@@ -1,14 +1,14 @@
 [package]
-name = "rand-sequence"
+name = "rand-unique"
 version = "0.2.0"
 edition = "2021"
 authors = ["Liam Gray <gmail@liamg.me>"]
 description = "A no-std crate for generating random sequences of unique integers in O(1) time."
-repository = "https://github.com/hoxxep/rand-sequence"
-documentation = "https://docs.rs/rand-sequence"
+repository = "https://github.com/hoxxep/rand-unique"
+documentation = "https://docs.rs/rand-unique"
 license = "MIT OR Apache-2.0"
 readme = "README.md"
-keywords = ["random", "sequence", "unique", "numbers", "no-std"]
+keywords = ["random", "unique", "numbers", "sequence", "integers"]
 categories = ["algorithms", "no-std"]
 exclude = ["Cargo.lock", "charts/*", ".github"]
 
