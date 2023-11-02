@@ -138,7 +138,7 @@ macro_rules! impl_unsized_iterator {
 
             #[inline]
             fn size_hint(&self) -> (usize, Option<usize>) {
-                ($T::MAX as usize, None)
+                ($T::MAX as usize - self.current_index as usize, None)
             }
         }
     };
@@ -156,7 +156,7 @@ macro_rules! impl_exact_size_iterator {
 
             #[inline]
             fn size_hint(&self) -> (usize, Option<usize>) {
-                ($T::MAX as usize + 1, Some($T::MAX as usize + 1))
+                ($T::MAX as usize + 1 - self.current_index as usize, Some($T::MAX as usize + 1 - self.current_index as usize))
             }
         }
 
@@ -285,8 +285,35 @@ mod tests {
             #[test]
             fn $name() {
                 let config = RandomSequenceBuilder::<$type>::new(0, 0);
-                let sequence = config.into_iter();
-                assert_eq!(sequence.len(), $type::MAX as usize + 1);
+                let mut sequence = config.clone().into_iter();
+                assert_eq!(sequence.len(), $type::MAX as usize + 1);  // eg. 256 items, but u8::MAX = 255
+                sequence.next();
+                assert_eq!(sequence.len(), $type::MAX as usize);
+                sequence.next();
+                assert_eq!(sequence.len(), $type::MAX as usize - 1);
+                sequence.next();
+                assert_eq!(sequence.len(), $type::MAX as usize - 2);
+                sequence.prev();
+                assert_eq!(sequence.len(), $type::MAX as usize - 1);
+
+                sequence.next();
+                sequence.next();
+                sequence.next();
+                assert_eq!(sequence.len(), $type::MAX as usize - 4);
+
+                // don't collect a u32, only test this on u8 and u16
+                if sequence.len() <= u16::MAX as usize + 1 {
+                    let remaining_len = sequence.len();
+                    let remaining_items: Vec<_> = sequence.collect();
+                    assert_eq!(remaining_len, remaining_items.len());
+
+                    // double check a fresh sequence
+                    let sequence = config.into_iter();
+                    assert_eq!(sequence.len(), $type::MAX as usize + 1);
+                    let all_items: Vec<_> = sequence.collect();
+                    assert_eq!(all_items.len(), $type::MAX as usize + 1);
+                    assert_eq!(all_items.len(), remaining_items.len() + 5);
+                }
             }
         };
     }

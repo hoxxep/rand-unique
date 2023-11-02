@@ -1,4 +1,4 @@
-# rand-sequence
+# rand-sequence (deprecated for rand-unique)
 
 Please note, **this crate has been renamed** in favour of [rand-unique](https://crates.io/crates/rand-unique), which better describes the functionality of this crate. If you would like to take ownership of the `rand-sequence` crate name, please [raise a GitHub issue](https://github.com/hoxxep/rand-unique/issues).
 
