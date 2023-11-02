@@ -1,5 +1,9 @@
 # rand-sequence
 
+Please note, **this crate has been renamed** in favour of [rand-unique](https://crates.io/crates/rand-unique), which better describes the functionality of this crate. If you would like to take ownership of the `rand-sequence` crate name, please [raise a GitHub issue](https://github.com/hoxxep/rand-unique/issues).
+
+---
+
 Deterministically generate a sequence of unique random numbers. A non-repeating pseudo-random number generator, directly index-able for the nth number in the sequence.
 
 Not cryptographically secure. Complexity: O(1) time and space complexity for all operations.
@@ -55,10 +59,10 @@ assert_eq!(nums.len(), u16::MAX as usize + 1);
 Future work could include a more rigorous analysis of the output distribution. For now, the following charts demonstrate the roughly uniform distribution for `RandomSequence<u16>`.
 
 Histogram visualisation of the `RandomSequence` output distribution.
-![Histogram demonstrating uniformity of distribution](https://github.com/hoxxep/rand-sequence/raw/master/charts/histogram-u16.png)
+![Histogram demonstrating uniformity of distribution](https://github.com/hoxxep/rand-unique/raw/master/charts/histogram-u16.png)
 
 Visual scatter plot of the `RandomSequence` output.
-![Scatter plot of RandomSequence output](https://github.com/hoxxep/rand-sequence/raw/master/charts/scatter-u16.png)
+![Scatter plot of RandomSequence output](https://github.com/hoxxep/rand-unique/raw/master/charts/scatter-u16.png)
 
 ## How It Works
 
