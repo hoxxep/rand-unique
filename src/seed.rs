@@ -19,3 +19,4 @@ seed_sequence!(u8);
 seed_sequence!(u16);
 seed_sequence!(u32);
 seed_sequence!(u64);
+seed_sequence!(usize);

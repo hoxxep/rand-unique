@@ -12,17 +12,7 @@ Properties:
   - Note that once a number has appeared in the sequence, it will not appear again. Each value in this sequence is unique.
 - Computing the value for any random index in the sequence is an O(1) operation.
   - `RandomSequence::n(index)` returns the output for a given position in the sequence.
-- Support for `u8`, `u16`, `u32`, and `u64`. Outputs can be cast to `i8`, `i16`, `i32`, and `i64` respectively.
-
-## Output Distribution
-
-Future work could include a more rigorous analysis of the output distribution. For now, the following charts demonstrate the roughly uniform distribution for `RandomSequence<u16>`.
-
-Histogram visualisation of the `RandomSequence` output distribution.
-![Histogram demonstrating uniformity of distribution](https://github.com/hoxxep/rand-sequence/raw/master/charts/histogram-u16.png)
-
-Visual scatter plot of the `RandomSequence` output.
-![Scatter plot of RandomSequence output](https://github.com/hoxxep/rand-sequence/raw/master/charts/scatter-u16.png)
+- Support for `u8`, `u16`, `u32`, `u64`, and `usize`. Outputs can be cast to `i8`, `i16`, `i32`, `i64`, and `isize` respectively.
 
 ## Features
 
@@ -30,7 +20,7 @@ This crate is no-std compatible.
 
 - `default-features`: `rand`
 - `rand`: Enables the `rand(&mut RngCore)` helper methods on `RandomSequenceBuilder` and `RandomSequence` to initialize with random seeds, which requires the `rand` dependency. Can be omitted and instead manually provide seeds to the `RandomSequenceBuilder::seed()` method to instantiate.
-- `serde`: Enables serde support for `RandomSequenceBuilder`, which requires the `serde` dependency.
+- `serde`: Enables serde `Serlialize` and `Deserialize` support for `RandomSequenceBuilder`, which requires the `serde` dependency.
 
 ## Example
 
@@ -43,9 +33,9 @@ let config = RandomSequenceBuilder::<u64>::rand(&mut OsRng);
 let mut sequence = config.into_iter();
 
 // Iterate over the sequence with next() and prev(), or index directly with n(i).
-assert_eq!(sequence.next(), sequence.n(0));
-assert_eq!(sequence.next(), sequence.n(1));
-assert_eq!(sequence.next(), sequence.n(2));
+assert_eq!(sequence.next().unwrap(), sequence.n(0));
+assert_eq!(sequence.next().unwrap(), sequence.n(1));
+assert_eq!(sequence.next().unwrap(), sequence.n(2));
 
 // Unique across the entire type, with support for u8, u16, u32, and u64.
 let sequence = RandomSequence::<u16>::rand(&mut OsRng);
@@ -55,9 +45,20 @@ let nums: std::collections::HashSet<u16> = (0..=u16::MAX)
     .collect();
 assert_eq!(nums.len(), u16::MAX as usize + 1);
 
-// Serialise the config to reproduce is later, if the "serde" feature is enabled.
+// Serialise the config to reproduce the same sequence later. Requires the
+// "serde" feature to be enabled.
 // let config = serde_json::to_string(&sequence.config).unwrap();
 ```
+
+## Output Distribution
+
+Future work could include a more rigorous analysis of the output distribution. For now, the following charts demonstrate the roughly uniform distribution for `RandomSequence<u16>`.
+
+Histogram visualisation of the `RandomSequence` output distribution.
+![Histogram demonstrating uniformity of distribution](https://github.com/hoxxep/rand-sequence/raw/master/charts/histogram-u16.png)
+
+Visual scatter plot of the `RandomSequence` output.
+![Scatter plot of RandomSequence output](https://github.com/hoxxep/rand-sequence/raw/master/charts/scatter-u16.png)
 
 ## How It Works
 

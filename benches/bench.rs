@@ -14,6 +14,7 @@ mod sequence {
         group.bench_function("n_u16", bench_n_u16);
         group.bench_function("n_u32", bench_n_u32);
         group.bench_function("n_u64", bench_n_u64);
+        group.bench_function("n_usize", bench_n_usize);
         group.bench_function("rand_u64", bench_rand_u64);
     }
 
@@ -35,6 +36,7 @@ mod sequence {
     bench_n!(bench_n_u16, u16);
     bench_n!(bench_n_u32, u32);
     bench_n!(bench_n_u64, u64);
+    bench_n!(bench_n_usize, usize);
 
     /// Compare standard random number generation time.
     fn bench_rand_u64(b: &mut Bencher) {

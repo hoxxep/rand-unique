@@ -1,6 +1,6 @@
 [package]
 name = "rand-sequence"
-version = "0.1.1"
+version = "0.2.0"
 edition = "2021"
 authors = ["Liam Gray <gmail@liamg.me>"]
 description = "A no-std crate for generating random sequences of unique integers in O(1) time."
