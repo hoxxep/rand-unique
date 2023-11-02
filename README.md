@@ -25,6 +25,7 @@ This crate is no-std compatible.
 ## Example
 
 ```rust
+use std::collections::HashSet;
 use rand::rngs::OsRng;
 use rand_unique::{RandomSequence, RandomSequenceBuilder};
 
@@ -37,16 +38,20 @@ assert_eq!(sequence.next().unwrap(), sequence.n(0));
 assert_eq!(sequence.next().unwrap(), sequence.n(1));
 assert_eq!(sequence.next().unwrap(), sequence.n(2));
 
-// Unique across the entire type, with support for u8, u16, u32, and u64.
+// Get the current index, if the sequence is not yet exhausted.
+assert_eq!(sequence.index(), Some(3));
+assert!(!sequence.exhausted());
+
+// Initialise a RandomSequence directly.
 let sequence = RandomSequence::<u16>::rand(&mut OsRng);
-let nums: std::collections::HashSet<u16> = (0..=u16::MAX)
-    .into_iter()
-    .map(|i| sequence.n(i))
-    .collect();
+
+// Unique across the entire type.
+// With support for u8, u16, u32, u64, and usize.
+let nums: HashSet<u16> = sequence.collect();
 assert_eq!(nums.len(), u16::MAX as usize + 1);
 
-// Serialise the config to reproduce the same sequence later. Requires the
-// "serde" feature to be enabled.
+// Serialise the config to reproduce the same sequence later.
+// Requires the "serde" feature to be enabled.
 // let config = serde_json::to_string(&sequence.config).unwrap();
 ```
 
