@@ -1,6 +1,6 @@
 [package]
 name = "rand-unique"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 authors = ["Liam Gray <gmail@liamg.me>"]
 description = "A no-std crate for generating random sequences of unique integers in O(1) time."
