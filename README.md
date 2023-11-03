@@ -4,15 +4,17 @@ Deterministically generate a sequence of unique random numbers. A non-repeating 
 
 Not cryptographically secure. Complexity: O(1) time and space complexity for all operations.
 
-Properties:
-- The sequence is deterministic and repeatable for the same seeds.
-- The sequence will only include each number once (every index has a unique output).
-- The sequence is pseudo-uniformly distributed.
-  - Each number which has not yet appeared in the sequence has a roughly equal probability of being the next number in the sequence.
-  - Note that once a number has appeared in the sequence, it will not appear again. Each value in this sequence is unique.
-- Computing the value for any random index in the sequence is an O(1) operation.
-  - `RandomSequence::n(index)` returns the output for a given position in the sequence.
-- Support for `u8`, `u16`, `u32`, `u64`, and `usize`. Outputs can be cast to `i8`, `i16`, `i32`, `i64`, and `isize` respectively.
+Properties of each [`RandomSequence`](https://docs.rs/rand-unique/latest/rand_unique/struct.RandomSequence.html):
+- **Unique:** The sequence will only include each number once; every index has a unique output.
+- **Uniform:** The sequence is pseudo-uniformly distributed. Each number which has not yet appeared in the sequence has a roughly equal probability of being the next number in the sequence.
+- **Fast:** Computing the value for any random index in the sequence is an O(1) operation in time and memory complexity.
+- **Indexable:** [`RandomSequence::n(index)`](https://docs.rs/rand-unique/latest/rand_unique/struct.RandomSequence.html#method.n) returns the output for a given position in the sequence.
+- **Integer Range:** Support for `u8`, `u16`, `u32`, `u64`, and `usize`. Outputs can be cast to `i8`, `i16`, `i32`, `i64`, and `isize` respectively.
+- **Terminating and Wrapping:** Iterator usage of [`RandomSequence::next()`](https://docs.rs/rand-unique/latest/rand_unique/struct.RandomSequence.html#method.next) will terminate at the end of the sequence. Alternatively, [`RandomSequence::wrapping_next()`](https://docs.rs/rand-unique/0.2.1/rand_unique/struct.RandomSequence.html#method.wrapping_next) will wrap around to the start of the sequence when exhausted.
+- **Deterministic:** The sequence is deterministic and repeatable for the same seeds.
+  - [`RandomSequenceBuilder`](https://docs.rs/rand-unique/latest/rand_unique/struct.RandomSequenceBuilder.html) can be serialized to store the sequence parameters. Must have the `serde` feature enabled.
+  - [`RandomSequenceBuilder::new(seed_base, seed_offset)`](https://docs.rs/rand-unique/latest/rand_unique/struct.RandomSequenceBuilder.html#method.new) can be used to instantiate with specific seeds.
+  - [`RandomSequenceBuilder::rand(prng)`](https://docs.rs/rand-unique/latest/rand_unique/struct.RandomSequenceBuilder.html#method.rand) can be used to instantiate with random seeds. Must have the `rand` feature enabled.
 
 ## Features
 
