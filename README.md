@@ -1,8 +1,8 @@
 # rand-unique
 
-Deterministically generate a sequence of unique random numbers. A non-repeating pseudo-random number generator, directly index-able for the nth number in the sequence.
+A no-std crate for generating sequences of unique random numbers in O(1) time and space. [`RandomSequence`](https://docs.rs/rand-unique/latest/rand_unique/struct.RandomSequence.html) is a non-repeating pseudo-random sequence generator, directly index-able for the nth number in the sequence.
 
-Not cryptographically secure. Complexity: O(1) time and space complexity for all operations.
+Not cryptographically secure. No-std compatible.
 
 Properties of each [`RandomSequence`](https://docs.rs/rand-unique/latest/rand_unique/struct.RandomSequence.html):
 - **Unique:** The sequence will only include each number once; every index has a unique output.
@@ -12,9 +12,10 @@ Properties of each [`RandomSequence`](https://docs.rs/rand-unique/latest/rand_un
 - **Integer Range:** Support for `u8`, `u16`, `u32`, `u64`, and `usize`. Outputs can be cast to `i8`, `i16`, `i32`, `i64`, and `isize` respectively.
 - **Terminating and Wrapping:** Iterator usage of [`RandomSequence::next()`](https://docs.rs/rand-unique/latest/rand_unique/struct.RandomSequence.html#method.next) will terminate at the end of the sequence. Alternatively, [`RandomSequence::wrapping_next()`](https://docs.rs/rand-unique/0.2.1/rand_unique/struct.RandomSequence.html#method.wrapping_next) will wrap around to the start of the sequence when exhausted.
 - **Deterministic:** The sequence is deterministic and repeatable for the same seeds.
-  - [`RandomSequenceBuilder`](https://docs.rs/rand-unique/latest/rand_unique/struct.RandomSequenceBuilder.html) can be serialized to store the sequence parameters. Must have the `serde` feature enabled.
+  - [`RandomSequenceBuilder`](https://docs.rs/rand-unique/latest/rand_unique/struct.RandomSequenceBuilder.html) can be serialized with serde to store the sequence parameters. Must have the `serde` feature enabled.
   - [`RandomSequenceBuilder::new(seed_base, seed_offset)`](https://docs.rs/rand-unique/latest/rand_unique/struct.RandomSequenceBuilder.html#method.new) can be used to instantiate with specific seeds.
   - [`RandomSequenceBuilder::rand(prng)`](https://docs.rs/rand-unique/latest/rand_unique/struct.RandomSequenceBuilder.html#method.rand) can be used to instantiate with random seeds. Must have the `rand` feature enabled.
+  - [`RandomSequenceBuilder::into_iter()`](https://docs.rs/rand-unique/latest/rand_unique/struct.RandomSequenceBuilder.html#method.into_iter) constructs a [`RandomSequence`](https://docs.rs/rand-unique/latest/rand_unique/struct.RandomSequence.html) with the parameters defined by the builder. Two builders configured the same will generate the same sequence, and so we can construct multiple iterators over the same sequence.
 
 ## Features
 
@@ -32,8 +33,8 @@ use rand::rngs::OsRng;
 use rand_unique::{RandomSequence, RandomSequenceBuilder};
 
 // Initialise a sequence from a random seed.
-let config = RandomSequenceBuilder::<u64>::rand(&mut OsRng);
-let mut sequence = config.into_iter();
+let config = RandomSequenceBuilder::<u16>::rand(&mut OsRng);
+let mut sequence: RandomSequence<u16> = config.into_iter();
 
 // Iterate over the sequence with next() and prev(), or index directly with n(i).
 assert_eq!(sequence.next().unwrap(), sequence.n(0));
@@ -44,12 +45,14 @@ assert_eq!(sequence.next().unwrap(), sequence.n(2));
 assert_eq!(sequence.index(), Some(3));
 assert!(!sequence.exhausted());
 
-// Initialise a RandomSequence directly.
-let sequence = RandomSequence::<u16>::rand(&mut OsRng);
+// Initialise a new RandomSequence iterator over the same sequence.
+let sequence_2 = config.into_iter();
+assert_eq!(sequence_2.n(0), sequence.n(0));
+assert_eq!(sequence_2.index(), Some(0));
 
-// Unique across the entire type.
+// Consume the iterator, and show outputs are unique across the entire type.
 // With support for u8, u16, u32, u64, and usize.
-let nums: HashSet<u16> = sequence.collect();
+let nums: HashSet<u16> = sequence_2.collect();
 assert_eq!(nums.len(), u16::MAX as usize + 1);
 
 // Serialise the config to reproduce the same sequence later.
