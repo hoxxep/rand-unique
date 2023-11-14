@@ -1,5 +1,8 @@
 # rand-unique
 
+[<img alt="crates.io version badge" src="https://img.shields.io/crates/v/rand-unique?color=green&logo=rust" />](https://crates.io/crates/rand-unique)&ensp;[<img alt="github build status badge" src="https://img.shields.io/github/actions/workflow/status/hoxxep/rand-unique/rust.yaml?logo=github" />](https://github.com/hoxxep/rand-unique)&ensp;[<img src="https://img.shields.io/badge/docs.rs-rand--unique-66c2a5?logo=docs.rs" />](https://docs.rs/rand-unique/latest/rand_unique/)&ensp;[<img alt="MIT license badge" src="https://img.shields.io/badge/license-MIT-blue.svg" />](https://github.com/hoxxep/rand-unique/blob/master/LICENSE-MIT)&ensp;[<img alt="Apache-2.0 license badge" src="https://img.shields.io/badge/license-Apache_2.0-blue.svg" />](https://github.com/hoxxep/rand-unique/blob/master/LICENSE-APACHE)
+
+
 A no-std crate for generating sequences of unique random numbers in O(1) time and space. [`RandomSequence`](https://docs.rs/rand-unique/latest/rand_unique/struct.RandomSequence.html) is a non-repeating pseudo-random sequence generator, directly index-able for the nth number in the sequence.
 
 Not cryptographically secure. No-std compatible.
