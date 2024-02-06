@@ -122,3 +122,7 @@ fn n(x: u64) -> u64 {
 Based on the article by [@preshing](https://github.com/preshing) using quadratic prime residue:
 - Article: http://preshing.com/20121224/how-to-generate-a-sequence-of-unique-random-integers/
 - Source: https://github.com/preshing/RandomSequence/blob/master/randomsequence.h
+
+Other inspiration:
+- LSFR https://en.wikipedia.org/wiki/Linear-feedback_shift_register
+- https://openpatent.blogspot.com/2013/04/xincrol-unique-and-random-number.html
