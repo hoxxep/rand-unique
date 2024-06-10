@@ -226,7 +226,7 @@ mod tests {
                 // check the exact size iterator ends correctly for u8 and u16
                 if ($type::MAX as usize) < $check {
                     let nums_vec: Vec<$type> = config.into_iter().take($check + 10).collect();
-                    assert_eq!(nums_vec.len(), $type::MAX as usize + 1);
+                    assert_eq!(nums_vec.len(), ($type::MAX as usize).saturating_add(1));
                 }
 
                 // check that we see each value only once
