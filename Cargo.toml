@@ -1,6 +1,6 @@
 [package]
 name = "rand-unique"
-version = "0.2.2"
+version = "0.3.0"
 edition = "2021"
 authors = ["Liam Gray <gmail@liamg.me>"]
 description = "A no-std crate for generating random sequences of unique integers in O(1) time."
@@ -27,10 +27,10 @@ rand = { version = "0.10.0", default-features = false, optional = true, features
 serde = { version = "1", optional = true, features = ["derive"] }
 
 [dev-dependencies]
-criterion = "0.5"
+criterion = "0.8"
 is_prime = "2.0"
 plotters = "0.3"
-statrs = "0.17"
+statrs = "0.18"
 
 [features]
 default = ["rand"]

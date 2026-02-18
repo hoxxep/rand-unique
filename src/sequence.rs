@@ -190,6 +190,7 @@ where
     T: QuadraticResidue,
     RandomSequence<T>: Iterator<Item = T>,
 {
+    #[inline]
     fn from(value: RandomSequenceBuilder<T>) -> Self {
         value.into_iter()
     }

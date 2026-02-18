@@ -4,8 +4,8 @@ criterion_group!(benches, sequence::sequence_bench);
 criterion_main!(benches);
 
 mod sequence {
-    use criterion::{black_box, BatchSize, Bencher, Criterion};
-    use rand::{self, rngs::SysRng};
+    use std::hint::black_box;
+    use criterion::{BatchSize, Bencher, Criterion};
     use rand_unique::RandomSequence;
 
     pub fn sequence_bench(c: &mut Criterion) {
@@ -20,7 +20,7 @@ mod sequence {
     macro_rules! bench_n {
         ($name:ident, $type:ident) => {
             fn $name(b: &mut Bencher) {
-                let sequence = RandomSequence::<$type>::rand(&mut SysRng);
+                let sequence = RandomSequence::<$type>::rand(&mut rand::rng());
 
                 b.iter_batched(
                     || rand::random::<$type>(),
