@@ -1,4 +1,4 @@
-use rand::RngCore;
+use rand::TryRng;
 
 use crate::{RandomSequence, RandomSequenceBuilder};
 
@@ -6,29 +6,29 @@ macro_rules! init_rand {
     ($type:ident, $tests:ident) => {
         impl RandomSequenceBuilder<$type> {
             /// Initialise a RandomSequenceBuilder from a random seed.
-            pub fn rand(rng: &mut impl RngCore) -> Self {
-                let seed_base = rng.next_u64() as $type;
-                let seed_offset = rng.next_u64() as $type;
+            pub fn rand(rng: &mut impl TryRng) -> Self {
+                let seed_base = rng.try_next_u64().unwrap() as $type;
+                let seed_offset = rng.try_next_u64().unwrap() as $type;
                 Self::new(seed_base, seed_offset)
             }
         }
 
         impl RandomSequence<$type> {
             /// Initialise a RandomSequence from a random seed.
-            pub fn rand(rng: &mut impl RngCore) -> Self {
+            pub fn rand(rng: &mut impl TryRng) -> Self {
                 RandomSequenceBuilder::<$type>::rand(rng).into_iter()
             }
         }
 
         #[cfg(test)]
         mod $tests {
-            use rand::rngs::OsRng;
+            use rand::rngs::SysRng;
 
             use super::*;
 
             #[test]
             fn test_rand() {
-                let mut rng = OsRng;
+                let mut rng = SysRng;
                 let config1 = RandomSequenceBuilder::<$type>::rand(&mut rng);
                 let config2 = RandomSequenceBuilder::<$type>::rand(&mut rng);
                 assert_ne!(config1, config2);

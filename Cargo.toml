@@ -20,7 +20,10 @@ harness = false
 
 [dependencies]
 num-traits = "0.2"
-rand = { version = "0", default-features = false, optional = true }
+rand = { version = "0.10.0", default-features = false, optional = true, features = [
+    "sys_rng",
+    "thread_rng",
+] }
 serde = { version = "1", optional = true, features = ["derive"] }
 
 [dev-dependencies]

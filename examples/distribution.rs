@@ -1,7 +1,7 @@
 use std::error::Error;
 
 use plotters::prelude::*;
-use rand::rngs::OsRng;
+use rand::rngs::SysRng;
 use rand_unique::RandomSequence;
 
 /// Generate histogram and scatter plots for a u16 sequence to demonstrate uniformity.
@@ -18,7 +18,7 @@ fn plot_histogram(file_name: &str, bins: u32, count: u32) -> Result<(), Box<dyn 
     let root = BitMapBackend::new(file_name, (1280, 960)).into_drawing_area();
     root.fill(&WHITE)?;
 
-    let sequence = RandomSequence::<T>::rand(&mut OsRng);
+    let sequence = RandomSequence::<T>::rand(&mut SysRng);
     let data: Vec<T> = sequence.take(count as usize).collect();
     let binned: Vec<(u32, u32)> =
         data.iter().map(|x| ((*x as f64 / (T::MAX as f64 / bins as f64)) as u32, 1)).collect();
@@ -54,7 +54,7 @@ fn plot_scatter(file_name: &str, count: u32) -> Result<(), Box<dyn Error>> {
     let root = BitMapBackend::new(file_name, (1280, 960)).into_drawing_area();
     root.fill(&WHITE)?;
 
-    let sequence = RandomSequence::<T>::rand(&mut OsRng);
+    let sequence = RandomSequence::<T>::rand(&mut SysRng);
     let data: Vec<(u32, u32)> = sequence.take(count as usize).enumerate().map(|(i, o)| (i as u32, o as u32)).collect();
 
     let mut chart = ChartBuilder::on(&root)
