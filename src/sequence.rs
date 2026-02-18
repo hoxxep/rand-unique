@@ -200,7 +200,7 @@ mod tests {
     use std::collections::{HashMap, HashSet};
     use std::vec::Vec;
 
-    use rand::rngs::OsRng;
+    use rand::rngs::SysRng;
     use statrs::distribution::{ChiSquared, ContinuousCDF};
 
     use super::*;
@@ -329,7 +329,7 @@ mod tests {
             #[test]
             fn $name() {
                 const BUCKETS: usize = 100;
-                let config = RandomSequenceBuilder::<$type>::rand(&mut OsRng);
+                let config = RandomSequenceBuilder::<$type>::rand(&mut SysRng);
 
                 // compute a normalised histogram over the sequence with BUCKETS buckets, where each bucket value
                 // is the percentage of values that fall into this bucket

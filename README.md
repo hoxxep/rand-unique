@@ -25,18 +25,18 @@ Properties of each [`RandomSequence`](https://docs.rs/rand-unique/latest/rand_un
 This crate is no-std compatible.
 
 - `default-features`: `rand`
-- `rand`: Enables the `rand(&mut RngCore)` helper methods on `RandomSequenceBuilder` and `RandomSequence` to initialize with random seeds, which requires the `rand` dependency. Can be omitted and instead manually provide seeds to the `RandomSequenceBuilder::seed()` method to instantiate.
+- `rand`: Enables the `rand(&mut TryRng)` helper methods on `RandomSequenceBuilder` and `RandomSequence` to initialize with random seeds, which requires the `rand` dependency. Can be omitted and instead manually provide seeds to the `RandomSequenceBuilder::seed()` method to instantiate.
 - `serde`: Enables serde `Serlialize` and `Deserialize` support for `RandomSequenceBuilder`, which requires the `serde` dependency.
 
 ## Example
 
 ```rust
 use std::collections::HashSet;
-use rand::rngs::OsRng;
+use rand::rngs::SysRng;
 use rand_unique::{RandomSequence, RandomSequenceBuilder};
 
 // Initialise a sequence from a random seed.
-let config = RandomSequenceBuilder::<u16>::rand(&mut OsRng);
+let config = RandomSequenceBuilder::<u16>::rand(&mut SysRng);
 let mut sequence: RandomSequence<u16> = config.into_iter();
 
 // Iterate over the sequence with next() and prev(), or index directly with n(i).
