@@ -10,7 +10,7 @@ license = "MIT OR Apache-2.0"
 readme = "README.md"
 keywords = ["random", "unique", "numbers", "sequence", "integers"]
 categories = ["algorithms", "no-std"]
-exclude = ["Cargo.lock", "charts/*", ".github"]
+exclude = ["Cargo.lock", "charts/*", ".github", "examples", "benches"]
 rust-version = "1.71.0"
 
 [lib]

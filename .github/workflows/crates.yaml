@@ -13,7 +13,6 @@ jobs:
       - name: Install cargo-get
         run: cargo install cargo-get
       - name: Check git tag and crate version match
-        working-directory: rapidhash
         run: |
           PKG_VERSION=$(cargo get package.version --pretty)
           TAG_VERSION=${{ github.ref_name }}
@@ -22,7 +21,6 @@ jobs:
               exit 1
           fi
       - name: Publish to crates.io
-        working-directory: rapidhash
         env:
           CRATES_TOKEN: ${{ secrets.CRATES_TOKEN }}
         run: cargo publish --token ${CRATES_TOKEN}
