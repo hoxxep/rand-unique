@@ -28,9 +28,9 @@ rand = { version = "0.10.0", default-features = false, optional = true, features
 serde = { version = "1", optional = true, features = ["derive"] }
 
 [dev-dependencies]
-criterion = "0.8"
+criterion = { version = "0.8", default-features = false, features = ["cargo_bench_support"]}
 is_prime = "2.0"
-plotters = "0.3"
+plotters = { version = "0.3", default-features = false, features = ["bitmap_encoder", "bitmap_backend", "histogram", "ttf"] }
 statrs = "0.18"
 
 [features]
