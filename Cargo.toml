@@ -11,6 +11,7 @@ readme = "README.md"
 keywords = ["random", "unique", "numbers", "sequence", "integers"]
 categories = ["algorithms", "no-std"]
 exclude = ["Cargo.lock", "charts/*", ".github"]
+rust-version = "1.71.0"
 
 [lib]
 

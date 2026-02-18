@@ -10,11 +10,28 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
+  test:
+    name: "Test"
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
+    - uses: dtolnay/rust-toolchain@stable
     - name: Rust dependency cache
       uses: Swatinem/rust-cache@v2
     - name: Compile and run tests
       run: cargo test  # --verbose
+
+  test-msrv:
+    name: "Test (MSRV)"
+    runs-on: ubuntu-latest
+    env:
+      RUST_VERSION: 1.71.0
+    steps:
+      - uses: actions/checkout@v6
+      - name: Rust dependency cache
+        uses: Swatinem/rust-cache@v2
+      - name: Install Rust (rustup, ${{ env.RUST_VERSION }})
+        shell: bash
+        run: rustup update ${{ env.RUST_VERSION }} --no-self-update && rustup default ${{ env.RUST_VERSION }} && cargo -V && rustc -V
+      - name: Compile (no-std)
+        run: cargo build --no-default-features
