@@ -52,6 +52,7 @@ where
     /// or these values have been taken from an already serialized RandomSequenceBuilder.
     ///
     /// Prefer [RandomSequenceBuilderInit::new] instead.
+    #[inline]
     pub unsafe fn from_spec(
         seed_base: T,
         seed_offset: T,
@@ -71,7 +72,7 @@ where
     }
 
     /// Intermediary function to compute the quadratic prime residue.
-    #[inline]
+    #[inline(always)]
     pub(crate) fn permute_qpr(&self, x: T) -> T {
         // The small set of integers out of range are mapped to themselves.
         if x >= self.prime {
@@ -102,6 +103,7 @@ where
     type IntoIter = RandomSequence<T>;
 
     /// Build a [RandomSequence] iterator from this config.
+    #[inline]
     fn into_iter(self) -> Self::IntoIter {
         let start_index = self.permute_qpr(self.permute_qpr(self.seed_base).wrapping_add(&self.init_base));
         let intermediate_offset = self.permute_qpr(self.permute_qpr(self.seed_offset).wrapping_add(&self.init_offset));
@@ -118,6 +120,7 @@ where
 
 impl RandomSequenceBuilder<u8> {
     /// Initialise a [RandomSequenceBuilder] from a specific seed pair.
+    #[inline]
     pub fn new(seed_base: u8, seed_offset: u8) -> Self {
         Self {
             seed_base,
@@ -132,6 +135,7 @@ impl RandomSequenceBuilder<u8> {
 
 impl RandomSequenceBuilder<u16> {
     /// Initialise a [RandomSequenceBuilder] from a specific seed pair.
+    #[inline]
     pub fn new(seed_base: u16, seed_offset: u16) -> Self {
         Self {
             seed_base,
@@ -146,6 +150,7 @@ impl RandomSequenceBuilder<u16> {
 
 impl RandomSequenceBuilder<u32> {
     /// Initialise a [RandomSequenceBuilder] from a specific seed pair.
+    #[inline]
     pub fn new(seed_base: u32, seed_offset: u32) -> Self {
         Self {
             seed_base,
@@ -160,6 +165,7 @@ impl RandomSequenceBuilder<u32> {
 
 impl RandomSequenceBuilder<u64> {
     /// Initialise a [RandomSequenceBuilder] from a specific seed pair.
+    #[inline]
     pub fn new(seed_base: u64, seed_offset: u64) -> Self {
         Self {
             seed_base,
@@ -174,6 +180,7 @@ impl RandomSequenceBuilder<u64> {
 
 impl RandomSequenceBuilder<usize> {
     /// Initialise a [RandomSequenceBuilder] from a specific seed pair.
+    #[inline]
     pub fn new(seed_base: usize, seed_offset: usize) -> Self {
         Self {
             seed_base,
@@ -197,6 +204,7 @@ where
 macro_rules! impl_residue {
     ($base_type:ident, $larger_type:ident) => {
         impl QuadraticResidue for $base_type {
+            #[inline(always)]
             fn residue(self, prime: Self) -> Self {
                 ((self as $larger_type * self as $larger_type) % prime as $larger_type) as Self
             }
