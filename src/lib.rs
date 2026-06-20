@@ -5,7 +5,7 @@
 extern crate std;
 
 #[doc(inline)]
-pub use crate::builder::RandomSequenceBuilder;
+pub use crate::builder::{RandomSequenceBuilder,QuadraticResidue};
 #[doc(inline)]
 pub use crate::sequence::RandomSequence;
 
